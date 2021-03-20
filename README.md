@@ -14,7 +14,7 @@ This is a necessity for the longevity of any software project. As the number of 
 
 ### 2.2 Unit Tests
 A *unit test* is a single case or scenario we wish to check for possibe bugs or errors in our code. Take for example the function `create_profile` below:
-```[python]
+```python 
 def create_profile(firstname, lastname, age, email, location):
     """ Create a dictionary with information about 
     a given person."""
@@ -30,7 +30,7 @@ def create_profile(firstname, lastname, age, email, location):
     return profile
 ```
 Call the function with some random string inputs (Here I am referencing [Malfurion](https://wow.gamepedia.com/Malfurion_Stormrage) from the [Warcraft Universe](https://wow.gamepedia.com/Wowpedia)):
-```[python]
+```python 
 profile = create_profile(
             firstname="Malfurion", 
             lastname="Stormrage", 
@@ -39,13 +39,13 @@ profile = create_profile(
             location="Suramar, Broken Isles")
 ```
 Then print our new `profile`:
-```[python]
+```python 
 print(profile)
 > {'firstname': 'Malfurion', 'lastname': 'Stormrage', 'age': '15032', 'email': 'druids.ftw@gmail.com', 'location': 'Suramar, Broken Isles'}
 
 ```
 and *hey presto*! It works just fine. We can try another example:
-```[python]
+```python 
 profile = create_profile(
             firstname=__import__("this"), 
             lastname=hex(0xDEADC0DE), 
@@ -54,7 +54,7 @@ profile = create_profile(
             location=None)
 ```
 with print output of:
-```[python]
+```python 
 print(profile)
 >The Zen of Python, by Tim Peters
 
@@ -94,7 +94,7 @@ Argument | Data Type | Conditions
 `location` | `string` | A list of locations separated by commas
 
 So we can develop some simple tests to check for these conditions. One way we can do this is to run the function with a couple of input cases we know should and shouldn't be allowed and see if the function rejects it. For this example, I will only show the case for the first input:
-```[python]
+```python 
 def test_firstname():
     """Unit test for input `firstname` of `create_profile`. If
     the test passes, return True. Else if it fails, return False."""
@@ -143,7 +143,7 @@ def test_firstname():
 ```
 Now run this with the `assert` keyword:
 > "The `assert` function raises an error if the input is `False`, and does nothing if `True`."
-```[python]
+```python 
 assert test_firstname()
 ```
 Which gives us an `AssertionError`, which means our test *failed*. Now we know our code doesn't work as we wanted and we can make the necessary changes to ensure our code is how we intended and this test passes! 
@@ -158,20 +158,26 @@ In `python`, these frameworks come in the form of packages. The native one that 
 * Lots of technical support
 * Fixtures allow for super-easy parameterizing
 
+Once we have setup our testing framework, all we need to do is call it whenever we make a change to our code, and the framework will systematically go through all your tests to see if any error has occured and if something has broken because of your change. 
+
+This back-and-forth between writing code, then testing, then fixing any errors that come from it is the basic idea behind *Test-driven Software Development*. We start with an expectation of what our program should do, we create tests to make sure these requirements are met, then we write the code that satisfies these tests, and in doing so, creates an error-free and well-developed software. 
+
+In our specific case in radio-interferometry, we predominantly work with `python` as our coding platform. In the next section, I will demonstrate simply how to achieve the above in `python`, utilizing `pytest`.
+
 ## 2.4 Using `pytest`
 Looking at our previous example, lets develop a unit test for the `age` input. We begin by importing the package:
-```[python]
+```python 
 import pytest
 ```
 And thats it. When we do this, `pytest` will handle the rest. Now we just have to make a test. Make sure the function that is doing the test has the prefix `test_` so that `pytest` can identify it as a test. To begin with, we will write a simple test that just passes:
-```[python]
+```python 
 def test_age():
     """Unit test for input `age` of `create_profile`."""
 
     assert True
 ``` 
 In a terminal, run the command `pytest -v <filepath>` where `<filepath>` is the path to our script with the test in it. My script is called `script.py`, so **my** `pytest` output is:
-```[bash]
+```bash
 =============================================================================================== test session starts ===============================================================================================
 platform linux -- Python 3.6.9, pytest-6.2.2, py-1.10.0, pluggy-0.13.1 -- /usr/bin/python3
 cachedir: .pytest_cache
@@ -185,7 +191,7 @@ script.py::test_age PASSED                                                      
 ================================================================================================ 1 passed in 0.02s ================================================================================================
 ```
 The `-v` option lists each test as it runs. As we can see, our test was found and it passed. Now we can develop the test. Here is one similar to that of `test_firstname`:
-```[python]
+```python 
 def test_age():
     """Unit test for input `age` of `create_profile`."""
 
@@ -219,7 +225,7 @@ def test_age():
             )
 ```
 This adaptation does not use `assert` functions, but rather it tries to run tests by checking if errors are raised. With `pytest.raises`, the test will pass if an error IS raised. Using the `pytest` command as before, we see that indeed our test fails:
-```[bash]
+```bash
 =============================================================================================== test session starts ===============================================================================================
 platform linux -- Python 3.6.9, pytest-6.2.2, py-1.10.0, pluggy-0.13.1
 benchmark: 3.2.3 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
@@ -271,7 +277,7 @@ FAILED script.py::test_age - Failed: DID NOT RAISE <class 'Exception'>
 ================================================================================================ 1 failed in 0.24s ================================================================================================
 ```
 As we can see, it failed because the function did not raise an error. Here is a different approach to `test_age` that does use the `assert` function:
-```[python]
+```python 
 def test_age(args):
     """Unit test for input `age` of `create_profile`."""
 
@@ -298,7 +304,7 @@ def test_age(args):
 This is quite different from the previous and won't work straight away. The most notabe reason for this is that there are no inputs yet. However, we have an argument called `args` and we use it to get `INPUT` and `EXPECTED`. To provide inputs, we are going to use a `python` wrapper called `pytest.fixture`. 
 
 `pytest.fixture` is placed on functions we want `pytest` to evaluate before we begin testing. The most common use for this is creating inputs. An example of this for our case would be the following (to apply a wrapper, we use the `@` symbol):
-```[python]
+```python 
 @pytest.fixture
 def args():
     """Provide `INPUT` and `EXPECTED` for `test_age`"""
@@ -314,7 +320,7 @@ def args():
     return INPUT, EXPECTED
 ```
 Place this code above the function `test_age` and now we can run `pytest` again using the same command as before. The test should pass as per values in `args`:
-```[bash]
+```bash
 =============================================================================================== test session starts ===============================================================================================
 platform linux -- Python 3.6.9, pytest-6.2.2, py-1.10.0, pluggy-0.13.1
 benchmark: 3.2.3 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
@@ -327,7 +333,7 @@ script.py .                                                                     
 ================================================================================================ 1 passed in 0.02s ================================================================================================
 ```
 Taking this one step further and parametrize this! I will create two lists of ages just below my imports: correct ages and incorrect ages.
-```[python]
+```python 
 # Integers 0 to 999
 CORRECT_AGES = [(i, True) for i in range(10**3)]
 
@@ -338,7 +344,7 @@ INCORRECT_AGES = [(-i, False) for i in range(1, 10**3)]
 AGES = CORRECT_AGES + INCORRECT_AGES
 ```
 Next we add an argument to `pytest.fixture` and change `args` as follows:
-```[python]
+```python 
 @pytest.fixture(params=AGES)
 def args(request):
     """Provide `INPUT` and `EXPECTED` for `test_age`"""
@@ -353,6 +359,27 @@ def args(request):
     # Return arguments
     return INPUT, EXPECTED
 ```
-This will now create every age input listed in `AGES` and run it as an individual test, listing each parameter as it progresses. This allows for a more insightful test and allows for combinations of inputs as well. Here is what the output should look like:
-```[bash]
+This will now create every age input listed in `AGES` and run it as an individual test, listing each parameter as it progresses. This allows for a more insightful test and allows for combinations of inputs as well. The output is quite long (to shorten, remove `-v` option), so I will list the last few lines:
+```bash
+...
+FAILED script.py::test_age[args1993] - assert True == False
+FAILED script.py::test_age[args1994] - assert True == False
+FAILED script.py::test_age[args1995] - assert True == False
+FAILED script.py::test_age[args1996] - assert True == False
+FAILED script.py::test_age[args1997] - assert True == False
+FAILED script.py::test_age[args1998] - assert True == False
+======================================================================================== 999 failed, 1000 passed in 8.89s =========================================================================================
 ```
+Which is what we expected:
+
+1. Integers 0 to 999 (1000 cases) should pass the test
+2. Integers -1 to -999 (999 cases) should fail the test
+
+## 2.5 Getting to grips with unit testing and `pytest`
+I have done a very simple and crude guide on unit testing in `python` for the needs of this tutorial. If you want to learn more, here is a list of resources and guides to help explain these concepts in an in-depth manner:
+
+* [Unit Tests in Python || Python Tutorial || Learn Python Programming, *by Socratica* (YouTube)](https://www.youtube.com/watch?v=1Lfv5tUGsn8)
+* [Python Testing Cookbook, *by Greg Turnquist* (Textbook)](https://edu.heibai.org/Python_Testing_Cookbook.pdf)
+* [Testing python applications with pytest, *by SEMAPHORE* (Article)](https://semaphoreci.com/community/tutorials/testing-python-applications-with-pytest)
+* [Python Testing with pytest, *by Brian Okken (2017)* (Textbook)](http://library.sadjad.ac.ir/opac/temp/18467.pdf)
+* [pytestguide.readthedocs.io (Website)](https://pytestguide.readthedocs.io/en/latest/)
