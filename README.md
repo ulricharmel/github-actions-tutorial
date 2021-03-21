@@ -168,7 +168,7 @@ Great! We can clearly see our function works for valid inputs, but completely fa
 
 <hr style="height:5px;border-width:0;background-color:#e6e6e6">
 
-## 2.3 Automating Unit Tests
+### 2.3 Automating Unit Tests
 The above code example would totally work, but in large programs, this is not feasible for the amount of things we would need to test for. Luckily, this is where unit testing frameworks come in. They automate the boring stuff and leave us to only write the necessary tests.
 
 In `python`, these frameworks come in the form of packages. The native one that comes with `python` is `unittest` (see [link](https://docs.python.org/3/library/unittest.html)). However, there are plenty of external unit testing libraries out there ([list](https://blog.testproject.io/2020/10/27/top-python-testing-frameworks/)), but for this tutorial, I will use `pytest`. It is my personal preference for testing for the following reasons:
