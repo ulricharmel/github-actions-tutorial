@@ -1,13 +1,9 @@
 # GitHub Actions Tutorial
- <hr style="height:10px;border-width:0;background-color:#e6e6e6"> 
 
 ## 1. Introduction
 This tutorial serves as a quick introduction into concepts like *tests* and *continuous* integration to enable you to utilize GitHub's very own CI environment, *GitHub Actions*.
 
-<hr style="height:10px;border-width:0;background-color:#e6e6e6">
-
 ## 2. Unit Tests in `python`
-<hr style="height:5px;border-width:0;background-color:#e6e6e6">
 
 ### 2.1 Unit Test Framework 
 This is a necessity for the longevity of any software project. As the number of lines of code grow, the ability for you to account for errors and possible bugs diminishes, because we are only human. However, we need to spot these issues one way or another before it causes any fatal software meltdown, patch them and re-release the program. This may sound like a daunting task, sinc it is intractable to all spot problems with our code we might not even know exists? Fortunately, it can easily be done with the use of a *Unit Test Framework*. But before we move to this, we need to start with the concept of *Unit Tests*.
@@ -424,4 +420,3 @@ I have done a very simple and crude guide on unit testing in `python` for the ne
 <hr style="height:10px;border-width:0;background-color:#e6e6e6">
 
 ## 3. Continuous Integration
-<hr style="height:5px;border-width:0;background-color:#e6e6e6">
