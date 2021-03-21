@@ -1,9 +1,18 @@
 # GitHub Actions Tutorial
+**Table of contents**
+  - [1. Introduction](#1-introduction)
+  - [2. Unit Tests in python](#2-unit-tests-in-python)
+    * [2.1 Unit Test Framework](#21-unit-test-framework)
+    * [2.2 Unit Tests](#22-unit-tests)
+    * [2.3 Automating Unit Tests](#23-automating-unit-tests)
+    * [2.4 Using Pytest](#24-using-pytest)
+    * [2.5 Getting to grips with unit testing and Pytest](#25-getting-to-grips-with-unit-testing-and-pytest)
+  - [3. Continuous Integration](#3-continuous-integration)
 
 ## 1. Introduction
 This tutorial serves as a quick introduction into concepts like *tests* and *continuous* integration to enable you to utilize GitHub's very own CI environment, *GitHub Actions*.
 
-## 2. Unit Tests in `python`
+## 2. Unit Tests in Python
 
 ### 2.1 Unit Test Framework 
 This is a necessity for the longevity of any software project. As the number of lines of code grow, the ability for you to account for errors and possible bugs diminishes, because we are only human. However, we need to spot these issues one way or another before it causes any fatal software meltdown, patch them and re-release the program. This may sound like a daunting task, sinc it is intractable to all spot problems with our code we might not even know exists? Fortunately, it can easily be done with the use of a *Unit Test Framework*. But before we move to this, we need to start with the concept of *Unit Tests*.
@@ -186,7 +195,7 @@ In our specific case in radio-interferometry, we predominantly work with `python
 
 <hr style="height:5px;border-width:0;background-color:#e6e6e6">
 
-## 2.4 Using `pytest`
+## 2.4 Using Pytest
 Looking at our previous example, lets develop a unit test with `pytest` for the `age` input. We begin by importing the package:
 ```python 
 import pytest
@@ -408,7 +417,7 @@ This is excellent! Now, if we wish to add more inputs to test, we just need to a
 
 <hr style="height:5px;border-width:0;background-color:#e6e6e6">
 
-### 2.5 Getting to grips with unit testing and `pytest`
+### 2.5 Getting to grips with unit testing and Pytest
 I have done a very simple and crude guide on unit testing in `python` for the needs of this tutorial, and so do not take my test designs as standard, since every project has its own requirements and restrictions. Look through the documentation and figure out what works for you! If you want to learn more, here is a list of resources and guides to help explain these concepts in an in-depth manner:
 
 * [Unit Tests in Python || Python Tutorial || Learn Python Programming, *by Socratica* (YouTube)](https://www.youtube.com/watch?v=1Lfv5tUGsn8)
