@@ -429,3 +429,16 @@ I have done a very simple and crude guide on unit testing in `python` for the ne
 <hr style="height:10px;border-width:0;background-color:#e6e6e6">
 
 ## 3. Continuous Integration
+
+### 3.1 What is Continuous Integration?
+*Continuous Integration* (or *CI* for short) is a process used by modern-day software developers to simulatenously develop a single project, making merges of changes, testing the source code and reviewing components of the project. Normally, CI is coupled with another process called *Continuous Delivery*, which is concerned with releasing of the software for public use, but for our circumstances, this is not entirely necessary (unless you plan to pursue software developing in astronomy).
+
+Returning to the former process, I will explain briefly why it is necessary in our environment. If you have a look at [kern-suite](https://kernsuite.info/), there are a lot of software packages. Most of the packages are developed by unique individuals with specific coding styles. Some packages could be written in `python`, `C` or even `C++`. Going deeper, each language has multiple different versions and with each version, there are sometimes nuances to keywords and defintions. Other times there are complete paradigm shifts, like the `print` keyword going from a *statement* in `python2` to a *function* in `python3`, causing the annoying change-over from *no-brackets* to *brackets* that breaks all our old programs.
+
+I could continue for quite a while listing all the infinite variations between these packages, but the pressing question I have is, when they release the software, how do they make sure it works on the computers of the people who will use it?
+
+>"CI is essentially a software engineering task where source code is both merged and tested on a mainline trunk. A CI task can do any multitude of tasks, including testing software components and deploying software components. The act of CI is essentially prescriptive and is an act that can be performed by any developer, system administrator, or operations personnel. Continuous integration is continuous because a developer can be continuously integrating software components while developing software."
+>
+> **\- Jean-Marcel Belmont. 2018. *Hands-on continuous integration and delivery: build and release quality software at scale with Jenkins, Travis CI, and CircleCI*. Packt.**
+
+This would be an incredible feat to do by hand.
