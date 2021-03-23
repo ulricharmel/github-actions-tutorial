@@ -9,12 +9,11 @@
     * [2.5 Getting to grips with unit testing and Pytest](#25-getting-to-grips-with-unit-testing-and-pytest)
   - [3. Continuous Integration](#3-continuous-integration)
 
-## 1. Introduction
+# 1. Introduction
 This tutorial serves as a quick introduction into concepts like *tests* and *continuous* integration to enable you to utilize GitHub's very own CI environment, *GitHub Actions*.
 
-## 2. Unit Tests in Python
-
-### 2.1 Unit Test Framework 
+# 2. Unit Tests in Python
+## 2.1 Unit Test Framework 
 This is a necessity for the longevity of any software project. As the number of lines of code grow, the ability for you to account for errors and possible bugs diminishes, because we are only human. However, we need to spot these issues one way or another before it causes any fatal software meltdown, patch them and re-release the program. This may sound like a daunting task, sinc it is intractable to all spot problems with our code we might not even know exists? Fortunately, it can easily be done with the use of a *Unit Test Framework*. But before we move to this, we need to start with the concept of *Unit Tests*.
 
 **What is a unit test framework and how are they used?**: 
@@ -22,9 +21,9 @@ This is a necessity for the longevity of any software project. As the number of 
 >
 > **\- pg. 5, Paul Hamill. 2004. *Unit test frameworks* (First. ed.). O'Reilly.**
 
-<hr style="height:5px;border-width:0;background-color:#e6e6e6">
+---
 
-### 2.2 Unit Tests
+## 2.2 Unit Tests
 A *unit test* is a single case or scenario we wish to check for possibe bugs or errors in our code. For each issue that can be realised, we can create a unit test for it. So, lets begin with an example issue. Look at the function `create_profile` below:
 ```python 
 def create_profile(firstname, lastname, age, email, location):
@@ -175,9 +174,9 @@ TOTAL PASSED: 4/8 (50.0%)
 ```
 Great! We can clearly see our function works for valid inputs, but completely fails on invalid inputs. From here, make the necessary changes to ensure the code is how we intended it to be and that all tests pass! 
 
-<hr style="height:5px;border-width:0;background-color:#e6e6e6">
+---
 
-### 2.3 Automating Unit Tests
+## 2.3 Automating Unit Tests
 The above code example would totally work, but in large programs, this is not feasible for the amount of things we would need to test for. Luckily, this is where unit testing frameworks come in. They automate the boring stuff and leave us to only write the necessary tests.
 
 In `python`, these frameworks come in the form of packages. The native one that comes with `python` is `unittest` (see [link](https://docs.python.org/3/library/unittest.html)). However, there are plenty of external unit testing libraries out there ([list](https://blog.testproject.io/2020/10/27/top-python-testing-frameworks/)), but for this tutorial, I will use `pytest`. It is my personal preference for testing for the following reasons:
@@ -193,7 +192,7 @@ This back-and-forth between writing code, then testing, then fixing any errors t
 
 In our specific case in radio-interferometry, we predominantly work with `python` as our coding platform and so in the next section, I will demonstrate simply how to achieve the above in `python`, utilizing `pytest`.
 
-<hr style="height:5px;border-width:0;background-color:#e6e6e6">
+---
 
 ## 2.4 Using Pytest
 Looking at our previous example, lets develop a unit test with `pytest` for the `age` input. We begin by importing the package:
@@ -415,9 +414,9 @@ Which is what we expected:
 
 This is excellent! Now, if we wish to add more inputs to test, we just need to append it to `AGES`. This concludes the basic usage of `pytest` for this tutorial.
 
-<hr style="height:5px;border-width:0;background-color:#e6e6e6">
+---
 
-### 2.5 Getting to grips with unit testing and Pytest
+## 2.5 Getting to grips with unit testing and Pytest
 I have done a very simple and crude guide on unit testing in `python` for the needs of this tutorial, and so do not take my test designs as standard, since every project has its own requirements and restrictions. Look through the documentation and figure out what works for you! If you want to learn more, here is a list of resources and guides to help explain these concepts in an in-depth manner:
 
 * [Unit Tests in Python || Python Tutorial || Learn Python Programming, *by Socratica* (YouTube)](https://www.youtube.com/watch?v=1Lfv5tUGsn8)
@@ -426,11 +425,10 @@ I have done a very simple and crude guide on unit testing in `python` for the ne
 * [Python Testing with pytest, *by Brian Okken (2017)* (Textbook)](http://library.sadjad.ac.ir/opac/temp/18467.pdf)
 * [pytestguide.readthedocs.io (Website)](https://pytestguide.readthedocs.io/en/latest/)
 
-<hr style="height:10px;border-width:0;background-color:#e6e6e6">
+---
 
-## 3. Continuous Integration
-
-### 3.1 What is Continuous Integration?
+# 3. Continuous Integration
+## 3.1 What is Continuous Integration?
 *Continuous Integration* (or *CI* for short) is a process used by modern-day software developers to simulatenously develop a single project, making merges of changes, testing the source code and reviewing components of the project. Normally, CI is coupled with another process called *Continuous Delivery*, which is concerned with releasing of the software for public use, but for our circumstances, this is not entirely necessary (unless you plan to pursue software developing in astronomy).
 
 Returning to the former process, I will explain briefly why it is necessary in our environment. If you have a look at [kern-suite](https://kernsuite.info/), there are a lot of software packages. Most of the packages are developed by unique individuals with specific coding styles. Some packages could be written in `python`, `C` or even `C++`. Going deeper, each language has multiple different versions and with each version, there are sometimes nuances to keywords and defintions. Other times there are complete paradigm shifts, like the `print` keyword going from a *statement* in `python2` to a *function* in `python3`, causing the annoying change-over from *no-brackets* to *brackets* that breaks all our old programs.
@@ -441,4 +439,47 @@ I could continue for quite a while listing all the infinite variations between t
 >
 > **\- Jean-Marcel Belmont. 2018. *Hands-on continuous integration and delivery: build and release quality software at scale with Jenkins, Travis CI, and CircleCI*. Packt.**
 
-This would be an incredible feat to do by hand.
+At first, this sounds like quite an impossible problem to solve. We would have to somehow run the software on multiple machines with different operating systems and variations in programming versions. The good news is, the impossible can be made possible with CI platforms.
+
+---
+
+## 3.2 CI Platforms
+The name is quite self-explanatory, i.e. it is a platform that hosts CI-related services. Such services include *version-control management*, *building software*, *communications hub*, *task automation* and *testing* to name a few. For the purposes of this tutorial, I will be looking at *task automation* and the *testing* aspect.
+
+Peering back at our previous example, most CI platforms come with the ability to *spawn* machines, with custom settings and perform tasks on said machines. There are a number of ways to do this, namely through *virtual machines* or *containers* (i.e. [Docker](https://www.docker.com/)). All the CI platform needs is minimum requirements for these different machines, and it does the rest automatically! This brings us to our two checks we would like to perform:
+
+1. Does the software install and run?
+2. Does it pass all software tests?
+
+Once we give it these instructions, it will run them on each machine it spins up. Once complete, it will report back to us the success of the operations. Since most CI platforms are hosted online, this entire process happens in the background, so we can continue working while it finishes. When we receive the report, it will precisely show where our software breaks and on which machine, so we can apply the needed fixes to make sure its compatible with that machine.
+
+---
+
+## 3.3 Type of CI platforms 
+   
+With usage in mind, we can now create our own CI process. There are quite a few examples of CI platforms to choose from:
+
+1. [Jenkins](https://www.jenkins.io/)
+2. [CircleCI](https://circleci.com/)
+3. [TeamCity](https://www.jetbrains.com/teamcity/)
+4. [Travis-CI](https://travis-ci.com/)
+5. [GitHub-Actions](https://github.com/features/actions)
+
+For this tutorial, I will be using *GitHub Actions*, for the following reasons:
+
+* Comes setup already with your GitHub repository
+* Simple to get started
+* Configuration file is easy to handle
+* Allows for integration with Docker
+* Can outsource execution to your own machines (i.e. run through Rhodes Clusters)
+
+To begin, we need to make a virtual environment with python. Any virtual environment package will work, but for simplicity, I will use `venv`. In the `github-actions` directiory:
+```bash
+$ python -m venv venv
+```
+which creates a new python environment in a directory called `venv`. To activate it:
+```bash
+$ cd venv/
+$ source bin/activate
+```
+A prefix of `(venv)` should appear 
