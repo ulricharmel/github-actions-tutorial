@@ -16,6 +16,8 @@ This tutorial serves as a quick introduction into concepts like *tests* and *con
 * `python3` where `version >= 3.6`
 * Python Virtual Environment (`venv` is fine)
 
+For a catch-up on `git` commands, there is a short guide called`git-cheat-sheet.pdf` in the repo.
+
 ## **IMPORTANT STEP!**
 
 Please ensure you do this otherwise it will not work for you. To setup this GitHub repo for yourself, run the following commands:
@@ -466,6 +468,8 @@ I have done a very simple and crude guide on unit testing in `python` for the ne
 * [Python Testing with pytest, *by Brian Okken (2017)* (Textbook)](http://library.sadjad.ac.ir/opac/temp/18467.pdf)
 * [pytestguide.readthedocs.io (Website)](https://pytestguide.readthedocs.io/en/latest/)
 
+--- 
+
 # 3. Continuous Integration
 ## 3.1 What is Continuous Integration?
 *Continuous Integration* (or *CI* for short) is a process used by modern-day software developers to simulatenously develop a single project, making merges of changes, testing the source code and reviewing components of the project. Normally, CI is coupled with another process called *Continuous Delivery*, which is concerned with releasing of the software for public use, but for our circumstances, this is not entirely necessary (unless you plan to pursue software developing in astronomy).
@@ -849,6 +853,8 @@ This script is also setup to test multiple python versions. Find the `strategy` 
 
 For an example of how I test kal-cal, see [kal-cal/actions](https://github.com/brianwelman2/kal-cal/actions) where all my workflow history can be found. 
 
+---
+
 ## 3.9 GitHub-Actions via GitHub.com
 
 For those who don't like manually setting this up, GitHub offers an assisted setup on the repo website to create a workflow and jobs. Navigate back to the [`Actions Tab`](https://github.com/brianwelman2/github-actions-tutorial/actions/), and a `New workflow button` should be displayed. 
@@ -900,4 +906,4 @@ This tutorial barely scratches the surface what the platform can do. Below is a 
 
 ## 3.12 Contact me
 
-For anymore help with this or topics relating to it, feel free to contact me via email at brianallisterwelman@gmail.com or on GitHub under `brianWelman2`.
+For anymore help with this or topics relating to it, feel free to contact me via email at brianallisterwelman@gmail.com, on GitHub under `brianWelman2` or on slack [RATT/RARG-#ratt-students](https://ratt-rarg.slack.com/archives/C01R85AR78U).
