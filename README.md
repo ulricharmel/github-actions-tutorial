@@ -1,13 +1,27 @@
 # GitHub Actions Tutorial
 **Table of contents**
-  - [1. Introduction](#1-introduction)
-  - [2. Unit Tests in python](#2-unit-tests-in-python)
-    * [2.1 Unit Test Framework](#21-unit-test-framework)
-    * [2.2 Unit Tests](#22-unit-tests)
-    * [2.3 Automating Unit Tests](#23-automating-unit-tests)
-    * [2.4 Using Pytest](#24-using-pytest)
-    * [2.5 Getting to grips with unit testing and Pytest](#25-getting-to-grips-with-unit-testing-and-pytest)
-  - [3. Continuous Integration](#3-continuous-integration)
+- [GitHub Actions Tutorial](#github-actions-tutorial)
+- [1. Introduction](#1-introduction)
+  - [**IMPORTANT STEP!**](#important-step)
+- [2. Unit Tests in Python](#2-unit-tests-in-python)
+  - [2.1 Unit Test Framework](#21-unit-test-framework)
+  - [2.2 Unit Tests](#22-unit-tests)
+  - [2.3 Automating Unit Tests](#23-automating-unit-tests)
+  - [2.4 Using Pytest](#24-using-pytest)
+  - [2.5 Getting to grips with unit testing and Pytest](#25-getting-to-grips-with-unit-testing-and-pytest)
+- [3. Continuous Integration](#3-continuous-integration)
+  - [3.1 What is Continuous Integration?](#31-what-is-continuous-integration)
+  - [3.2 CI Platforms](#32-ci-platforms)
+  - [3.3 Types of CI platforms](#33-types-of-ci-platforms)
+  - [3.4 GitHub-Actions Structure](#34-github-actions-structure)
+  - [3.5 Python Environment Setup](#35-python-environment-setup)
+  - [3.6 Using and testing kal-cal](#36-using-and-testing-kal-cal)
+  - [3.7 GitHub-Actions Setup](#37-github-actions-setup)
+  - [3.8 Your first job](#38-your-first-job)
+  - [3.9 GitHub-Actions via GitHub.com](#39-github-actions-via-githubcom)
+  - [3.10 Pros and Cons](#310-pros-and-cons)
+  - [3.11 More on GitHub-Actions](#311-more-on-github-actions)
+  - [3.12 Contact me for help](#312-contact-me-for-help)
 
 # 1. Introduction
 This tutorial serves as a quick introduction into concepts like *tests* and *continuous integration* to enable you to utilize GitHub's very own CI environment, *GitHub Actions*. The following software requirements are needed:
@@ -500,7 +514,7 @@ The final and most important aspect to this whole process is that is independent
 
 ---
 
-## 3.3 Type of CI platforms 
+## 3.3 Types of CI platforms 
    
 With usage in mind, we can now create our own CI process. There are quite a few examples of CI platforms to choose from:
 
@@ -904,6 +918,6 @@ This tutorial barely scratches the surface what the platform can do. Below is a 
 
 ---
 
-## 3.12 Contact me
+## 3.12 Contact me for help
 
 For anymore help with this or topics relating to it, feel free to contact me via email at brianallisterwelman@gmail.com, on GitHub under `brianWelman2` or on slack [RATT/RARG-#ratt-students](https://ratt-rarg.slack.com/archives/C01R85AR78U).
