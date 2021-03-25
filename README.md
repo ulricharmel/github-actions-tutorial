@@ -451,7 +451,9 @@ Peering back at our previous example, most CI platforms come with the ability to
 1. Does the software install and run?
 2. Does it pass all software tests?
 
-Once we give it these instructions, it will run them on each machine it spins up. Once complete, it will report back to us the success of the operations. Since most CI platforms are hosted online, this entire process happens in the background, so we can continue working while it finishes. When we receive the report, it will precisely show where our software breaks and on which machine, so we can apply the needed fixes to make sure its compatible with that machine.
+Once we give it these instructions, it will run them on each machine it spins up. Once complete, it will report back to us the success of the operations. Since most CI platforms are hosted online, this entire process happens in the background, so we can continue working while it finishes. When we receive the report, it will precisely show where our software breaks and on which machine, so we can apply the needed fixes to make sure its compatible with that machine. 
+
+The final and most important aspect to this whole process is that is independent of the user and their machine. This creates a generalized and unbiased approach to installing and running your software so that it has the best chance to run on all systems.
 
 ---
 
@@ -473,7 +475,18 @@ For this tutorial, I will be using *GitHub Actions*, for the following reasons:
 * Allows for integration with Docker
 * Can outsource execution to your own machines (i.e. run through Rhodes Clusters)
 
-To begin, we need to make a virtual environment with python. Any virtual environment package will work, but for simplicity, I will use `venv`. In the `github-actions` directiory:
+---
+
+## 3.4 GitHub-Actions Structure
+The structure is quite simplistic and easy to understand. It begins with *workflows* which is a single instance of the CI running. Within a workflow, there can be multiple *jobs* that are run for different purposes. Each job has a specific goal in mind, so for example, we wish to test our software on `Ubuntu` vs `Fedora` operating systems. There will be a job to test the software with `Ubuntu` and another for `Fedora`, separately and labelled likewise. 
+
+In each job, we define *steps* it has to take to setup the environment, install any additional softwares and then run the tests (or any other command). Note, GitHub runs these workflows based on triggers. This highly customisable, but by default, we normally trigger a workflow on a `git push` or `git pull_request`.
+
+All this information will be stored in a configuration file for GitHub to read and run, and that is it. GitHub will take of the rest and report the results. Before I move to an applied example, we first need to create our testing environment.
+
+## 3.4 Python Environment Setup
+
+To begin, we need to make a virtual environment with Python. Any virtual environment package will work, but for simplicity, I will use `venv`. In the `github-actions` directiory:
 ```bash
 $ python -m venv venv
 ```
@@ -482,4 +495,171 @@ which creates a new python environment in a directory called `venv`. To activate
 $ cd venv/
 $ source bin/activate
 ```
-A prefix of `(venv)` should appear 
+A prefix of `(venv)` should appear in the command-line of your terminal. All references to `python` will now be in `venv`. To deactivate the environment:
+```bash
+$ deactivate
+```
+Lastly, with the *activated environment*, upgrade `pip` (you might not have to do this depending on which virtual-environment package you used):
+```bash
+$ pip install --upgrade pip
+```
+Python version for now should not matter for the needs of this task. Next, I'm going to install my very own Python package I have been working on for my masters: [kal-cal](https://github.com/brianwelman2/kal-cal). 
+
+> **kal-cal** is a Python library developed to provide proof-of-concept tools for Kalman Filtering and Smoothing Theory (see Bayesian Filtering and Smoothing by Simo S ̈arkk ̈a) as a replacement calibration framework for Radio-Interoferometric Gains Calibration (see Non-linear Kalman Filters for calibration in radio interferometry by Cyril Tasse). This library is part of the master's thesis work of Brian Welman (@brianWelman2 on github) through Radio Astronomy Techniques and Technologies under SARAO during the period of 2020 to 2021.
+
+To install this package, use the following command:
+```bash
+$ pip install https://github.com/brianwelman2/kal-cal/archive/refs/heads/main.zip
+```
+It has quite a lot of dependencies so please be patient. To test if it has installed, open a Python-terminal with:
+```bash
+$ python
+```
+And import kal-cal:
+```python
+> import kalcal
+```
+---
+
+## 3.5 Using and testing kal-cal
+
+Navigate to the folder `main`:
+```bash
+$ cd main/
+```
+> **NB**: Ensure [`casalite`](https://casa.nrao.edu/casa_obtaining.shtml) is installed for this next part. 
+
+Next, run the `kalcal_script.py`:
+```bash
+$ python kalcal_script.py
+```
+Which will do the following:
+
+1. Create an empty measurement set using `simms`
+2. Create jones matrices with gains-only data and store it in `normal.npy`
+3. Generate model-visibilities and visibilities with noise
+4. Load all the above data
+5. Create input parameters for Extended Kalman Filter and Smoother
+6. Run the *Extended Kalman Filter*, using `numba`
+7. Run the *Extended Kalman Smoother* (x3), using `numba`
+8. Plot *gains-magnitude* over time, i.e. $g_p \cdot g_q^\dagger$ against true gains
+9. Done
+
+The resulting plot should be as follows:
+
+![kal-cal ouput](output.png)
+
+Continuing, I wish to test some features of kal-cal. Using `pytest` as our testing framework, open the file `main/test_example.py`, which will have two functions:
+
+1. `test_check_kalcal_import`
+    > Sometimes its is important to see if you can actually just import the modules and sub-elements of your python program, so we can write a test to check for this.
+
+2. `test_jones_correct_dimensions`
+    > Data-values are always essential to test, but dimensions are also important to check, especially with lots of linear algebra based operations, where dimension is key.
+
+Starting with the first, an example test we could use is as follows:
+```python
+def test_check_kalcal_import():
+    """Test if you can import kalcal."""
+
+    # Boolean for test outcome
+    PASSED = False
+
+    try:
+        # Run the import for kalcal
+        import kalcal
+
+        # If it made it here, it passed
+        PASSED = True
+
+    except ImportError:
+        # Import failed, so test failed
+        pass
+
+    # Run assert
+    assert PASSED
+```
+This simple layout runs the test by seeing if an `ImportError` is raised or not. In the terminal (in `main/`), run:
+```bash
+$ pytest -v test_example.py
+```
+If kal-cal is installed properly, the test should pass with the following output:
+```bash
+=============================================================================================== test session starts ===============================================================================================
+platform linux -- Python 3.6.9, pytest-6.2.2, py-1.10.0, pluggy-0.13.1 -- /home/brian/Code/github-actions-tutorial/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/brian/Code/github-actions-tutorial/main
+collected 2 items                                                                                                                                                                                                 
+
+test_example.py::test_check_kalcal_import PASSED                                                                                                                                                            [ 50%]
+test_example.py::test_jones_correct_dimensions PASSED                                                                                                                                                       [100%]
+
+================================================================================================ 2 passed in 0.13s ================================================================================================
+```
+For the second stub, I can check dimensions by using the `shape` attribute and brute-force the needed outcome. I've done the first part already by loading in the jones data-file using `numpy`:
+```python
+def test_jones_correct_dimensions():
+    """Test if dimensions of jones is correct."""
+
+    # Open datafile and extract jones
+    with open("normal.npy", "rb") as data:
+        jones = np.load(data)
+
+    # Correct Dimensions
+    n_time = 200
+    n_ant = 7
+    n_chan = 1
+    n_dir = 1
+    n_corr = 2
+
+    # Correct shape
+    correct_shape = (n_time, n_ant, n_chan, n_dir, n_corr)
+
+    # Get jones shape
+    jones_shape = jones.shape
+
+    # Assert shapes are the same
+    assert correct_shape == jones_shape
+```
+Run the same pytest command as before to get:
+```bash
+=============================================================================================== test session starts ===============================================================================================
+platform linux -- Python 3.6.9, pytest-6.2.2, py-1.10.0, pluggy-0.13.1 -- /home/brian/Code/github-actions-tutorial/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/brian/Code/github-actions-tutorial/main
+collected 2 items                                                                                                                                                                                                 
+
+test_example.py::test_check_kalcal_import PASSED                                                                                                                                                            [ 50%]
+test_example.py::test_jones_correct_dimensions PASSED                                                                                                                                                       [100%]
+
+================================================================================================ 2 passed in 0.13s ================================================================================================
+```
+Now we have two tests that run on our machines that pass. For a larger test example, in the repo, I have a folder called `tests` which is my current testing-suite for kal-cal. Navigate to the root-directory of the repo (`github-actions-tutorial/`), and run the following command:
+```bash
+$ pytest tests/
+```
+Which systamically goes through each test-script testing various parts of kal-cal. The tests should take about a minute or so. Before we automate this, we need to setup of GitHub-Actions
+
+---
+
+## 3.6 GitHub-Actions Setup
+
+This process is actually quite simple for our means. All GitHub requires is a configuration file with all the instructions to create a Python Environment and what commands to run. 
+
+Make a directory, in the root directory of the repo, called `.github/`. In `.github`, make another directory called `workflows/` and move into it:
+```bash
+$ mkdir .github/
+$ cd .github/
+$ mkdir workflows/
+$ cd workflows/
+```
+This is where GitHub looks for the workflow configuration files to run. Create a `yaml` file called `kalcal_testing.yml` and open it. The first thing we need is to give it a name and its triggers. Below, I will set the trigger to be for a `git push` command:
+```yaml
+name: kal-cal-testing
+
+on:
+    push:
+        branches: ["main"]
+```
+The `on` keyword lists the triggers for this workflow. I've added additional information that makes the workflow only run on the `main` branch of the repo.
+
