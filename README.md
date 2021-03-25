@@ -10,7 +10,48 @@
   - [3. Continuous Integration](#3-continuous-integration)
 
 # 1. Introduction
-This tutorial serves as a quick introduction into concepts like *tests* and *continuous* integration to enable you to utilize GitHub's very own CI environment, *GitHub Actions*.
+This tutorial serves as a quick introduction into concepts like *tests* and *continuous integration* to enable you to utilize GitHub's very own CI environment, *GitHub Actions*. The following software requirements are needed:
+
+* [`casalite`](https://casa.nrao.edu/casa_obtaining.shtml)
+* `python3` where `version >= 3.6`
+* Python Virtual Environment (`venv` is fine)
+
+## **IMPORTANT STEP!**
+
+Please ensure you do this otherwise it will not work for you. To setup this GitHub repo for yourself, run the following commands:
+
+1. Clone the repository to your machine, using `https` or `ssh`: 
+   
+    ```bash
+    $ git clone https://github.com/brianwelman2/github-actions-tutorial.git
+    ```
+
+2. Navigate into `github-actions-tutorial/`:
+
+    ```bash
+    $ cd github-actions-tutorial/
+    ```
+
+3. Create a new branch for you, replacing `<your-name-here>` for your name. This will be **YOUR** branch to work with and make changes:
+
+    ```bash
+    $ git branch <your-name-here>
+    ```
+
+4. Move to your new branch labelled as above:
+
+    ```bash
+    $ git checkout <your-name-here>
+    ```
+
+5. Push this branch to the repo for GitHub to acknowledge it. There should be no need for a pull-request since the branch should be identical to `main`.
+
+    ```bash
+    $ git push -u origin <your-name-here>
+    ```
+
+It should all be good to go and the tutorial should be customized for work to be on this branch. Before we start, below is unit test theory to cover for the tutorial. If you understand it, you can skip to [Section 3. Continuous Integration](#3-continuous-integration).
+
 
 # 2. Unit Tests in Python
 ## 2.1 Unit Test Framework 
@@ -25,7 +66,7 @@ This is a necessity for the longevity of any software project. As the number of 
 
 ## 2.2 Unit Tests
 A *unit test* is a single case or scenario we wish to check for possibe bugs or errors in our code. For each issue that can be realised, we can create a unit test for it. So, lets begin with an example issue. Look at the function `create_profile` below:
-```python 
+```python
 def create_profile(firstname, lastname, age, email, location):
     """ Create a dictionary with information about 
     a given person."""
@@ -425,8 +466,6 @@ I have done a very simple and crude guide on unit testing in `python` for the ne
 * [Python Testing with pytest, *by Brian Okken (2017)* (Textbook)](http://library.sadjad.ac.ir/opac/temp/18467.pdf)
 * [pytestguide.readthedocs.io (Website)](https://pytestguide.readthedocs.io/en/latest/)
 
----
-
 # 3. Continuous Integration
 ## 3.1 What is Continuous Integration?
 *Continuous Integration* (or *CI* for short) is a process used by modern-day software developers to simulatenously develop a single project, making merges of changes, testing the source code and reviewing components of the project. Normally, CI is coupled with another process called *Continuous Delivery*, which is concerned with releasing of the software for public use, but for our circumstances, this is not entirely necessary (unless you plan to pursue software developing in astronomy).
@@ -484,7 +523,9 @@ In each job, we define *steps* it has to take to setup the environment, install 
 
 All this information will be stored in a configuration file for GitHub to read and run, and that is it. GitHub will take of the rest and report the results. Before I move to an applied example, we first need to create our testing environment.
 
-## 3.4 Python Environment Setup
+---
+
+## 3.5 Python Environment Setup
 
 To begin, we need to make a virtual environment with Python. Any virtual environment package will work, but for simplicity, I will use `venv`. In the `github-actions` directiory:
 ```bash
@@ -521,7 +562,7 @@ And import kal-cal:
 ```
 ---
 
-## 3.5 Using and testing kal-cal
+## 3.6 Using and testing kal-cal
 
 Navigate to the folder `main`:
 ```bash
@@ -642,7 +683,7 @@ Which systamically goes through each test-script testing various parts of kal-ca
 
 ---
 
-## 3.6 GitHub-Actions Setup
+## 3.7 GitHub-Actions Setup
 
 This process is actually quite simple for our means. All GitHub requires is a configuration file with all the instructions to create a Python Environment and what commands to run. 
 
@@ -653,13 +694,210 @@ $ cd .github/
 $ mkdir workflows/
 $ cd workflows/
 ```
-This is where GitHub looks for the workflow configuration files to run. Create a `yaml` file called `kalcal_testing.yml` and open it. The first thing we need is to give it a name and its triggers. Below, I will set the trigger to be for a `git push` command:
+This is where GitHub looks for the workflow configuration files to run. Create a `yaml` file called:
+```
+<your-name-here>_kalcal.yml
+```
+where `<your-name-here>` is the name of your branch.
+
+>**NB**: From this point onwards, where ever you see the word `brian`, replace it with your branch name you created earlier.
+
+Open the file in an editor. The first thing we need is to give it a name and its triggers. Below, I will set the trigger to be for a `git push` command:
 ```yaml
-name: kal-cal-testing
+name: brian-kalcal
 
 on:
     push:
-        branches: ["main"]
+        branches: ["brian"]
 ```
-The `on` keyword lists the triggers for this workflow. I've added additional information that makes the workflow only run on the `main` branch of the repo.
 
+>The `on` keyword lists the triggers for this workflow, and additionally, we specifically asking it to look for when there is a `push` command on the `brian` branch specificially, and no other branch.
+
+Add and commit the workflow file, then push it to GitHub:
+```bash
+$ git add brian_kalcal.yml
+$ git commit -m "Workflow file added"
+$ git push origin brian
+```
+>From this point onwards, GitHub will automatically run the workflow file and will run it each time a `push` command is done.
+
+If you go to [`github-actions-tutorial`](https://github.com/brianwelman2/github-actions-tutorial) on GitHub, switch to your branch, and click the `Actions` tab, all information for GitHub-Actions will be listed, including the result of your new workflow triggered by your workflow file. It failed since there were no jobs to run just yet.
+
+---
+
+## 3.8 Your first job
+
+Now that the link has been made between our repo and GitHub-Actions, we can make our first job. In `brian_kalcal.yml`, below the previous code, I will create a job. We start with the `jobs` keyword and the name of our first job, testing the kal-cal tests:
+
+```yaml
+jobs:
+
+  # First Job
+  kalcal-tests:
+    name: Tests for kal-cal package
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [3.6]
+```
+> Each job requires certain keywords to operate. In this scenario, we list:
+> 
+> 1. `name` - Identifier for our job.
+> 
+> 2. `runs-on` - Operating System to spawn for the job
+> 
+> 3. `strategy` - Builds configuration matrix for your job
+> 
+> 4. `matrix` - The configuration matrix itself
+> 
+> 5. `python-version` - Configuration that lists all the python-versions to run this job on 
+>
+> The last 3 keywords essentially will create sub-jobs from this job, where each sub-job will have its own version of python as listed by 5.
+
+This sets up the machine for the job, now we need to setup the software and give it steps. We can do this by writing the `steps` keyword below and at the same indentation-level as our new job, `kalcal-tests`. Our first step will be to create the Python-environment:
+
+```yaml
+steps:
+    # Create Python Environment
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+```
+> Our step is given a `name` that describes what it going to do, after which we instruct it to use the predefined GitHub-Action's function `actions/setup-python@v2` to install `Python` on the machine, but `with` a specific version in mind. The `uses` keyword is used to select an action function in GitHub-Actions list of actions. The `${{ matrix.python-version }}` expression retrieves the python-version for associated with that specific sub-job. 
+
+For our next steps, we need to copy the GitHub repo, update `pip` and install kal-cal on the machine:
+```yaml
+    # Make a copy of your repo
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Upgrade pip 
+    - name: Upgrade pip 
+      run: |
+        python -m pip install --upgrade pip
+
+    # Install kal-cal
+    - name: Install kal-cal via pip
+      run: |
+        pip install https://github.com/brianwelman2/kal-cal/archive/refs/heads/main.zip
+```
+> Again, the `uses` keyword is used, but here it calles `checkout@v2` which copies everything in the GitHub repo to the current folder in the machine. The `run` keyword stipulates a terminal command for the machine to run. Here, it is running `python` and `pip`. At this point in time, our CI is setup to do anything, and just requires testing.
+
+Finally, we add the step for testing with `pytest`:
+```yaml
+    # Run the tests
+    - name: Test with pytest
+      run: |
+            pytest tests/
+```
+> The workflow will begin testing and will display a fail if ANY test fails, else it will display a pass.
+
+The full file should look as follows:
+
+```yaml
+name: brian-kalcal
+
+on:
+    push:
+        branches: ["brian"]
+
+jobs:
+
+  # First Job
+  kalcal-tests:
+    name: Tests for kal-cal package
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [3.6]
+
+    steps:
+    # Create Python Environment
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # Make a copy of your repo
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Upgrade pip 
+    - name: Upgrade pip 
+      run: |
+        python -m pip install --upgrade pip
+
+    # Install kal-cal
+    - name: Install kal-cal via pip
+      run: |
+        pip install https://github.com/brianwelman2/kal-cal/archive/refs/heads/main.zip
+
+    # Run the tests
+    - name: Test with pytest
+        run: |
+            pytest tests/
+```
+
+To get this running, add the workflow file and push it to GitHub under your branch. To see it running, go to [`Actions Tab`](https://github.com/brianwelman2/github-actions-tutorial/actions/). 
+
+Your will see a list of the last commits of each push command. A yellow dot should appear the one you recently just pushed. Click on the commit, which will give a layout of information of all the jobs in this workflow. On the left, all the jobs in the workflow and their statuses are listed. You can click on a specific job to see information on the steps and watch it run.
+
+If the test fails, it will list which step it failed on so you can go back and make necessary corrections and changes. Otherwise, everything is setup to automatically test your code whenever you push to GitHub. To add more tests, just add them to `tests/`. If you want to create more jobs, just list it below the `kalcal-tests` job at the same indentation-level.
+
+This script is also setup to test multiple python versions. Find the `strategy` keyword and in the `python-version` array, list other versions like `3.7`, `3.8` and `3.9`. Push the changes and now GitHub-Actions will spawn sub-jobs for each python-version! 
+
+For an example of how I test kal-cal, see [kal-cal/actions](https://github.com/brianwelman2/kal-cal/actions) where all my workflow history can be found. 
+
+## 3.9 GitHub-Actions via GitHub.com
+
+For those who don't like manually setting this up, GitHub offers an assisted setup on the repo website to create a workflow and jobs. Navigate back to the [`Actions Tab`](https://github.com/brianwelman2/github-actions-tutorial/actions/), and a `New workflow button` should be displayed. 
+
+Clicking it takes you to a page that lists a bunch of templates you can follow to setup any workflow, for any particular reason, and for any programming language (not just Python). Pick one that suits you and follow the instructions.
+
+---
+
+## 3.10 Pros and Cons
+GitHub-Actions has the following perks:
+
+* Notifications can be setup on the repo so that GitHub to contact you when a workflow has finished and what the result was. Possible methods of communication are discord, slack, email, sms, tweets, calendar and telegram to name a few.
+
+* Automates the whole testing process and ensures good quality developing.
+
+* Customize triggers to only run a workflow when a certain words found in the last commit.
+
+* Test documentation for your repo and your code.
+
+The only limitation I have encountered with GitHub-Actions is that because it is free, the processing power and memory facilities are tiny. The specifications are:
+
+* 2-core CPU
+* 7 GB of RAM memory
+* 14 GB of SSD disk space
+But this can be overcome with self-hosting (see next section).
+
+---
+
+## 3.11 More on GitHub-Actions
+
+This tutorial barely scratches the surface what the platform can do. Below is a list of additional resources and guides on how to setup GitHub-Actions for various needs:
+
+* Documentation for GitHub-Actions: 
+  * https://docs.github.com/en/actions
+
+* Setup GitHub-Actions using *Docker*: 
+  * https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action
+
+* Marketplace for Custom Actions for your workflow:
+  * https://github.com/marketplace?type=actions
+
+* Run GitHub-Actions on *Self-Hosted* machines (run on Rhodes Clusters):
+  * https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners
+
+* GitHub-Actions Interactive Guides:
+  * https://docs.github.com/en/actions/guides
+
+---
+
+## 3.12 Contact me
+
+For anymore help with this or topics relating to it, feel free to contact me via email at brianallisterwelman@gmail.com or on GitHub under `brianWelman2`.
