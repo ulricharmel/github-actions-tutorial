@@ -853,7 +853,7 @@ jobs:
 
     # Run the tests
     - name: Test with pytest
-        run: |
+      run: |
             pytest tests/
 ```
 
