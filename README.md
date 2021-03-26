@@ -601,8 +601,8 @@ Which will do the following:
 5. Create input parameters for Extended Kalman Filter and Smoother
 6. Run the *Extended Kalman Filter*, using `numba`
 7. Run the *Extended Kalman Smoother* (x3), using `numba`
-8. Plot *gains-magnitude* over time, i.e. ![formula](https://render.githubusercontent.com/render/math?math=g_p \cdot g_q^\dagger) against true gains
-9. Done
+8. Plot *gains-magnitude* over time, i.e. ![formula](https://render.githubusercontent.com/render/math?math=g_pg_q^\dagger) against true gains
+10. Done
 
 The resulting plot should be as follows:
 
