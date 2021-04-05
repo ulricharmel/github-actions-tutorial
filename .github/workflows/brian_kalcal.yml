@@ -1,0 +1,41 @@
+name: brian-kalcal
+
+on:
+    push:
+        branches: ["brian"]
+
+jobs:
+
+  # First Job
+  kalcal-tests:
+    name: Tests for kal-cal package
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [3.6]
+
+    steps:
+    # Create Python Environment
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # Make a copy of your repo
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Upgrade pip 
+    - name: Upgrade pip 
+      run: |
+        python -m pip install --upgrade pip
+
+    # Install kal-cal
+    - name: Install kal-cal via pip
+      run: |
+        pip install https://github.com/brianwelman2/kal-cal/archive/refs/heads/main.zip
+
+    # Run the tests
+    - name: Test with pytest
+      run: |
+            pytest tests/
