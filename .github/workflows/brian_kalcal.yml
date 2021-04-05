@@ -2,7 +2,7 @@ name: brian-kalcal
 
 on:
     push:
-        branches: ["brian"]
+        branches: ["main"]
 
 jobs:
 
